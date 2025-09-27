@@ -2,6 +2,7 @@
 import express from "express";
 import connectDataBase from "./data/dbConnect.js";
 import "dotenv/config"; // já carrega automaticamente o .env
+import livro from "./models/Livro.js";
 
 const conexao = await connectDataBase();
 
@@ -15,27 +16,6 @@ conexao.once("open", () => {
 
 const app = express();
 app.use(express.json()); // middleware/ter acesso as requisições e resposta no momentos que estão sendo feitas, pode modificar objetos e informações extras.
-
-const livros = [
-  {
-    id: 1,
-    titulo: "Cabeça fria, coração quente",
-  },
-  {
-    id: 2,
-    titulo: "O senhor dos Anéis",
-  },
-];
-
-function buscaLivro(id) {
-  return livros.findIndex((livro) => {
-    return livro.id === Number(id);
-  });
-}
-
-app.get("/livros", (req, res) => {
-  res.status(200).json(livros);
-});
 
 app.get("/livros/:id", (req, res) => {
   const index = buscaLivro(req.params.id);
