@@ -3,6 +3,7 @@ import express from "express";
 import connectDataBase from "./data/dbConnect.js";
 import "dotenv/config"; // já carrega automaticamente o .env
 import routes from "./routes/index.js";
+import manipuladorDeErros from "./middleware/manipuladorDeErros.js";
 
 const conexao = await connectDataBase();
 
@@ -16,5 +17,7 @@ conexao.once("open", () => {
 
 const app = express();
 routes(app);
+
+app.use(manipuladorDeErros); //middleware: função especial do express, esse tipo intercepta qualquer erro que for lançado pela aplicação
 
 export default app;
