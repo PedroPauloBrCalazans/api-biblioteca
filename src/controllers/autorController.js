@@ -1,6 +1,4 @@
-import mongoose from "mongoose";
 import { autor } from "../models/Autor.js";
-import e from "express";
 
 class AutorController {
   static async listarAutores(req, res, next) {

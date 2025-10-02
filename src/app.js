@@ -18,6 +18,6 @@ conexao.once("open", () => {
 const app = express();
 routes(app);
 
-app.use(manipuladorDeErros); //middleware: função especial do express, esse tipo intercepta qualquer erro que for lançado pela aplicação
+app.use(manipuladorDeErros); //middleware: função especial do express, para intercepta qualquer erro que for lançado pela aplicação
 
 export default app;
