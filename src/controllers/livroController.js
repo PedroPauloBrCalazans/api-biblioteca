@@ -86,30 +86,41 @@ class LivroController {
 
   static async listarLivrosPorFiltro(req, res, next) {
     try {
-      const busca = processarBusca(req.query);
+      const busca = await processarBusca(req.query);
 
-      const livrosResultado = await livro.find(busca);
-      res.status(200).json(livrosResultado);
+      if (busca !== null) {
+        const livrosResultado = await livro.find(busca);
+
+        res.status(200).send(livrosResultado);
+      } else {
+        res.status(200).send([]);
+      }
     } catch (erro) {
       next(erro);
     }
   }
 }
 
-function processarBusca(filtros) {
-  const { editora, titulo, minPaginas, maxPaginas } = filtros;
-
-  const busca = {};
+async function processarBusca(filtros) {
+  const { editora, titulo, minPaginas, maxPaginas, nomeAutor } = filtros;
+  let busca = {};
 
   if (editora) busca.editora = editora;
   if (titulo) busca.titulo = { $regex: titulo, $options: "i" };
 
   if (minPaginas || maxPaginas) busca.paginas = {};
+  if (minPaginas) busca.paginas.$gte = Number(minPaginas);
+  if (maxPaginas) busca.paginas.$lte = Number(maxPaginas);
 
-  //gte = maior ou igual que
-  //lte = menor ou igual que
-  if (minPaginas) busca.paginas.$gte = minPaginas;
-  if (maxPaginas) busca.paginas.$lte = maxPaginas;
+  if (nomeAutor) {
+    const autorEncontrado = await autor.findOne({
+      nome: { $regex: nomeAutor, $options: "i" },
+    });
+
+    if (autorEncontrado !== null) {
+      busca["autor._id"] = autorEncontrado._id;
+    }
+  }
 
   return busca;
 }
