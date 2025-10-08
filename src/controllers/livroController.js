@@ -119,6 +119,8 @@ async function processarBusca(filtros) {
 
     if (autorEncontrado !== null) {
       busca["autor._id"] = autorEncontrado._id;
+    } else {
+      busca = null;
     }
   }
 
